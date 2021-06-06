@@ -15,10 +15,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const updateDB = async () =>{
   return await supabase
       .from('codes')
-      .select('*');
+      .select('code,lastat:max("createAt")');
 }
 
-export default function Home2() {
+export default function ListsPage() {
   const [panelData, setPanelData] = useState([]);
   const [newPanelName, setNewPanelName] = useState('');
   const [editMode, setEditMode] = useState(false);
@@ -29,6 +29,7 @@ export default function Home2() {
   useEffect(()=>{
     supabase
       .from('codes')
+      .select('code,lastat:max(createAt)')
       .on('*',async (data)=>{
         let DB = await updateDB();
         setPanelData(DB.data);
@@ -48,32 +49,18 @@ export default function Home2() {
           バーコード管理
         </h1>
       </div>
-      <main className='container max-w-4xl px-8 pb-16 sm:mx-auto flex flex-col'>
-        <div className='text-2xl text-bold mt-4'>一覧<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>
+      <main className='container max-w-4xl px-8 sm:mx-auto flex flex-col'>
+        <div className='text-2xl text-bold mt-4'>一覧</div>
         <div className='w-full flex flex-row flex-wrap justify-items-center'>
           {panelData.length === 0 ? (<DammyPanel />) :
             panelData.map(
               (item) =>(
-                  <div className='w-full flex flex-row' key={item.code + item.createAt}>
+                  <div className='w-full flex flex-row' key={item.code + item.lastat}>
                     <div className='flex flex-col flex-wrap w-auto mr-auto'>
-                      <div className='text-gray-400 text-xs'>{item.createAt}</div>
+                      <div className='text-gray-400 text-xs'>{item.lastat}</div>
                       <div className='pl-4 text-lg'>{item.code}</div>
-                      <div className='pl-4'>{item.comment}</div>
                     </div>
                     <div className='h-full mr-0 my-auto'>
-                      <button
-                        className='z-50 text-gray-400 border-none bg-while focus:outline-none focus:shadow-outline'
-                        tabIndex={2}
-                        onClick={(e) => {
-                          supabase
-                            .from('codes')
-                            .delete()
-                            .eq('id', item.id)
-                            .then(()=>{
-                              console.log('delete ' + item.id);
-                            });
-                        }}
-                      >削除</button>
                     </div>
                   </div>
                 )
