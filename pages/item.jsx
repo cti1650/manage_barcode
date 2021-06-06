@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle,faTimes,faEdit,faFlag,faPlus,faTrash,faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -12,25 +13,30 @@ const supabaseKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjk0NjQ0MCwiZXhwIjoxOTM4NTIyNDQwfQ.f7FXT6ZTRoQI4EOIxDf0v09HWChg8qktOC8yz8fAunQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const updateDB = async () =>{
+const updateDB = async (id) =>{
   return await supabase
       .from('codes')
-      .select('*');
+      .select('*')
+      .eq('id',id);
 }
 
-export default function Home2() {
+export default function Item() {
+  const router = useRouter();
   const [panelData, setPanelData] = useState([]);
   const [newPanelName, setNewPanelName] = useState('');
   const [editMode, setEditMode] = useState(false);
+  console.log(router.query.id);
   useEffect(async ()=>{
-    let DB = await updateDB();
+    let DB = await updateDB(router.query.id);
     setPanelData(DB.data);
   },[]);
   useEffect(()=>{
     supabase
       .from('codes')
+      .select('*')
+      .eq('id',router.query.id)
       .on('*',async (data)=>{
-        let DB = await updateDB();
+        let DB = await updateDB(router.query.id);
         setPanelData(DB.data);
       })
       .subscribe();
@@ -48,32 +54,18 @@ export default function Home2() {
           バーコード管理
         </h1>
       </div>
-      <main className='container max-w-4xl px-8 pb-16 sm:mx-auto flex flex-col'>
-        <div className='text-2xl text-bold mt-4'>一覧<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>
+      <main className='container max-w-4xl px-8 sm:mx-auto flex flex-col'>
+        <div className='text-2xl text-bold mt-4'>一覧</div>
         <div className='w-full flex flex-row flex-wrap justify-items-center'>
           {panelData.length === 0 ? (<DammyPanel />) :
             panelData.map(
               (item) =>(
-                  <div className='w-full flex flex-row' key={item.code + item.createAt}>
+                  <div className='w-full flex flex-row' key={item.code + item.lastat}>
                     <div className='flex flex-col flex-wrap w-auto mr-auto'>
-                      <div className='text-gray-400 text-xs'>{item.createAt}</div>
+                      <div className='text-gray-400 text-xs'>{item.lastat}</div>
                       <div className='pl-4 text-lg'>{item.code}</div>
-                      <div className='pl-4'>{item.comment}</div>
                     </div>
                     <div className='h-full mr-0 my-auto'>
-                      <button
-                        className='h-full z-50 text-gray-400 border-none bg-while focus:outline-none focus:shadow-outline'
-                        tabIndex={2}
-                        onClick={(e) => {
-                          supabase
-                            .from('codes')
-                            .delete()
-                            .eq('id', item.id)
-                            .then(()=>{
-                              console.log('delete ' + item.id);
-                            });
-                        }}
-                      >削除</button>
                     </div>
                   </div>
                 )
