@@ -15,7 +15,8 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const updateDB = async () =>{
   return await supabase
       .from('codes')
-      .select('*');
+      .select('*')
+      .order('createAt', { ascending: false });
 }
 
 export default function Home2() {
@@ -24,14 +25,30 @@ export default function Home2() {
   const [editMode, setEditMode] = useState(false);
   useEffect(async ()=>{
     let DB = await updateDB();
-    setPanelData(DB.data);
+    let codeList = [];
+    setPanelData(DB.data.filter(item=>{
+      if(~codeList.indexOf(item.code)){
+        return false;
+      }else{
+        codeList = [...codeList,item.code];
+        return true;
+      }
+    }));
   },[]);
   useEffect(()=>{
     supabase
       .from('codes')
       .on('*',async (data)=>{
         let DB = await updateDB();
-        setPanelData(DB.data);
+        let codeList = [];
+        setPanelData(DB.data.filter(item=>{
+          if(~codeList.indexOf(item.code)){
+            return false;
+          }else{
+            codeList = [...codeList,item.code];
+            return true;
+          }
+        }));
       })
       .subscribe();
   },[]);
@@ -49,7 +66,7 @@ export default function Home2() {
         </h1>
       </div>
       <main className='container max-w-4xl px-8 pb-16 sm:mx-auto flex flex-col'>
-        <div className='text-2xl text-bold mt-4'>一覧<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>
+        <div className='text-2xl text-bold mt-4'>該当：{panelData.length} 個<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>
         <div className='w-full flex flex-row flex-wrap justify-items-center'>
           {panelData.length === 0 ? (<DammyPanel />) :
             panelData.map(
@@ -68,7 +85,7 @@ export default function Home2() {
                           supabase
                             .from('codes')
                             .delete()
-                            .eq('id', item.id)
+                            .eq('code', item.code)
                             .then(()=>{
                               console.log('delete ' + item.id);
                             });
