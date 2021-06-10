@@ -70,7 +70,7 @@ export default function Home2() {
         <div className='w-full flex flex-row flex-wrap justify-items-center'>
           {panelData.length === 0 ? (<DammyPanel />) :
             panelData.map(
-              (item) => (<Panel item={item}></Panel>)
+              (item) => (<Panel key={item.id} item={item}></Panel>)
             )}
         </div>
         <SearchPanel></SearchPanel>
