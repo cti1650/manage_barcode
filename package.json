@@ -19,6 +19,7 @@
     "postcss": "^8.2.13",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.8.4",
     "supabase": "^0.3.8",
     "tailwindcss": "^2.1.2"
   }

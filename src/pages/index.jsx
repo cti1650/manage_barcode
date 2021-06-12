@@ -2,9 +2,9 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle,faTimes,faEdit,faFlag,faPlus,faTrash,faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Panel } from '../src/components/panel/codePanel';
-import { SearchPanel } from '../src/components/search/searchPanel';
-import { DammyPanel } from '../src/components/panel/dammy';
+import { Panel } from '../components/panel/codePanel';
+import { SearchPanel } from '../components/search/searchPanel';
+import { DammyPanel } from '../components/panel/dammy';
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -20,7 +20,7 @@ const updateDB = async () =>{
       .order('createAt', { ascending: false });
 }
 
-export default function Home2() {
+export default function Home() {
   const [panelData, setPanelData] = useState([]);
   const [editMode, setEditMode] = useState(false);
   useEffect(async ()=>{

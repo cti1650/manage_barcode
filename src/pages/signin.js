@@ -1,0 +1,36 @@
+import { NextPage } from 'next';
+import { useForm } from 'react-hook-form';
+import { Form } from '../components/Form';
+import { supabase } from '../util/supabase';
+
+// https://qiita.com/NozomuTsuruta/items/e730d037b679890e3d02
+
+const Signin = () => {
+  const { register, handleSubmit } = useForm();
+  const handleSignin = ({ email, password }) => {
+    supabase.auth.signIn({ email, password });
+  };
+
+  const inputList = [
+    {
+      type: 'email',
+      name: 'email',
+      ref: register('email', { required: true }),
+    },
+    {
+      type: 'password',
+      name: 'password',
+      ref: register('password', { required: true }),
+    },
+  ];
+
+  return (
+    <Form
+      onSubmit={handleSubmit(handleSignin)}
+      inputList={inputList}
+      buttonText='サインイン'
+    />
+  );
+};
+
+export default Signin;
