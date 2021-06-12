@@ -34,7 +34,6 @@ export default function App({ Component, pageProps }) {
         <h1>loading...</h1>
       ) : (
         <>
-          <button onClick={() => supabase.auth.signOut()}>ログアウト</button>
           <Component {...pageProps} />
         </>
       )}

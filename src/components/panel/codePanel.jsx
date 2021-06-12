@@ -16,6 +16,7 @@ const updateDB = async (code) =>{
   return await supabase
       .from('codes')
       .select('*')
+      .eq('uid',supabase.auth.user().id)
       .eq('code',code)
       .order('createAt', { ascending: false });
 }
@@ -74,6 +75,7 @@ export function Panel(props) {
                 supabase
                   .from('codes')
                   .delete()
+                  .eq('uid',supabase.auth.user().id)
                   .eq('code', item.code)
                   .then(()=>{
                     console.log('delete ' + item.id);

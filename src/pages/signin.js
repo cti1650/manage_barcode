@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Form } from '../components/Form';
 import { supabase } from '../util/supabase';
@@ -25,11 +26,19 @@ const Signin = () => {
   ];
 
   return (
-    <Form
-      onSubmit={handleSubmit(handleSignin)}
-      inputList={inputList}
-      buttonText='サインイン'
-    />
+    <div>
+      <Form
+        onSubmit={handleSubmit(handleSignin)}
+        inputList={inputList}
+        buttonText='サインイン'
+      />
+      <Link href='/signup'>
+        <a>signup</a>
+      </Link>
+      <Link href='/forgot'>
+        <a>forgot</a>
+      </Link>
+    </div>
   );
 };
 

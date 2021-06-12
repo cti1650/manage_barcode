@@ -3,20 +3,24 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle,faTimes,faEdit,faFlag,faPlus,faTrash,faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Panel } from '../components/panel/codePanel';
+import { supabase } from "../util/supabase";
 import { SearchPanel } from '../components/search/searchPanel';
 import { DammyPanel } from '../components/panel/dammy';
 
 import { createClient } from '@supabase/supabase-js';
 
+/*
 const supabaseUrl = 'https://zpqdwrwmgualomsihngl.supabase.co';
 const supabaseKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyMjk0NjQ0MCwiZXhwIjoxOTM4NTIyNDQwfQ.f7FXT6ZTRoQI4EOIxDf0v09HWChg8qktOC8yz8fAunQ';
 const supabase = createClient(supabaseUrl, supabaseKey);
+*/
 
 const updateDB = async () =>{
   return await supabase
       .from('codes')
       .select('*')
+      .eq('uid',supabase.auth.user().id)
       .order('createAt', { ascending: false });
 }
 
@@ -64,6 +68,7 @@ export default function Home() {
         >
           バーコード管理
         </h1>
+        <button onClick={() => {supabase.auth.signOut();location.href='/'}}>ログアウト</button>
       </div>
       <main className='container max-w-4xl px-8 pb-16 sm:mx-auto flex flex-col'>
         <div className='text-2xl text-bold mt-4'>該当：{panelData.length} 個<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>

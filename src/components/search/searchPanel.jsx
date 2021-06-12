@@ -27,7 +27,7 @@ export function SearchPanel(props) {
               if (newPanelName) {
                 supabase
                   .from('codes')
-                  .insert([{ code: newPanelName }], { upsert: true })
+                  .insert([{ code: newPanelName,uid:supabase.auth.user().id }], { upsert: true })
                   .then(() => {
                     setNewPanelName('');
                   });
@@ -44,7 +44,7 @@ export function SearchPanel(props) {
             if (newPanelName) {
               supabase
                 .from('codes')
-                .insert([{ code: newPanelName }], { upsert: true })
+                .insert([{ code: newPanelName ,uid:supabase.auth.user().id}], { upsert: true })
                 .then(() => {
                   setNewPanelName('');
                 });
