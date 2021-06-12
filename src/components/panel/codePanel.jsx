@@ -2,7 +2,7 @@ import cc from 'classcat';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle,faTimes,faEdit,faFlag,faPlus,faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle,faTimes,faEdit,faFlag,faPlus,faTrash,faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { CodeDetail } from '../board/codeDetail';
 import { Modal } from '../panel/modal';
 import { DammyPanel } from '../panel/dammy';
@@ -47,37 +47,40 @@ export function Panel(props) {
         </div>
         <div className='h-full mr-0 my-auto'>
           <button
-            className='h-full z-50 text-gray-400 border-none bg-while focus:outline-none focus:shadow-outline'
-            tabIndex={2}
-            onClick={(e) => {
-              supabase
-                .from('codes')
-                .delete()
-                .eq('code', item.code)
-                .then(()=>{
-                  console.log('delete ' + item.id);
-                });
-            }}
-          >削除</button>
-          <button
             className='h-full z-50 px-4 text-gray-400 border-none bg-while focus:outline-none focus:shadow-outline'
+            title='コードの読み取り履歴を表示する'
             tabIndex={2}
             onClick={(e) => {
               setflg(true);
             }}
-          >情報</button>
+          ><FontAwesomeIcon icon={faInfoCircle} className='w-6 h-6' /></button>
           <Modal
             flg={flg}
             onClick={(e) => {
               setflg(false);
             }}>
-            <div>{item.code}</div>
+            <div className='py-2 items-center text-3xl'>{item.code}</div>
             <div className='w-full flex flex-col flex-wrap justify-items-center p-5'>
               {panelData.length === 0 ? (<DammyPanel />) :
                 panelData.map(
                   (item) => (<div key={item.id}>{item.createAt}</div>)
                 )}
             </div>
+            <button
+              className='mb-4 mt-auto px-8 py-2 border border-gray-500 bg-gray-300 hover:text-red-500 text-white rounded-full focus:outline-none'
+              tabIndex={2}
+              title='コードを削除する'
+              onClick={(e) => {
+                supabase
+                  .from('codes')
+                  .delete()
+                  .eq('code', item.code)
+                  .then(()=>{
+                    console.log('delete ' + item.id);
+                  });
+                  setflg(false);
+              }}
+            ><FontAwesomeIcon icon={faTrash} className='w-6 h-6' /></button>
           </Modal>
         </div>
       </div>
