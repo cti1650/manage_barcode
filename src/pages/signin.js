@@ -26,18 +26,19 @@ const Signin = () => {
   ];
 
   return (
-    <div>
+    <div className='h-full grid justify-items-center'>
       <Form
         onSubmit={handleSubmit(handleSignin)}
         inputList={inputList}
         buttonText='サインイン'
-      />
-      <Link href='/signup'>
-        <a>signup</a>
-      </Link>
-      <Link href='/forgot'>
-        <a>forgot</a>
-      </Link>
+      >
+        <Link href='/signup'>
+          <a>signup</a>
+        </Link>
+        <Link href='/forgot'>
+          <a>forgot</a>
+        </Link>
+      </Form>
     </div>
   );
 };
