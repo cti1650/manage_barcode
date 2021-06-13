@@ -68,7 +68,7 @@ export default function Home() {
         >
           バーコード管理
         </h1>
-        <button onClick={() => {supabase.auth.signOut();location.href='/'}}>ログアウト</button>
+        <button className='absolute right-0 top-0 m-4' onClick={() => {supabase.auth.signOut();location.href='/'}}>ログアウト</button>
       </div>
       <main className='container max-w-4xl px-8 pb-16 sm:mx-auto flex flex-col'>
         <div className='text-2xl text-bold mt-4'>該当：{panelData.length} 個<a href="https://support.ubiregi.com/archives/8171" className='text-xs text-gray-400'>(バーコードリーダーMS910の設定方法)</a></div>
